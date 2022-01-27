@@ -7,12 +7,12 @@
   "browser_action": {
     "default_title": "Ze",
     "default_icon": "icon.png",
-    "default_popup": ""
+    "default_popup": "index.html"
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://www.instagram.com/*"
+      "matches": [        
+        "https://www.instagram.com/"
       ],
       "js": ["jquery.min.js", "content.js"]
     }

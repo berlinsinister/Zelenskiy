@@ -89,7 +89,7 @@ const zeStyles = (zePost) => {
   zePost.appendChild(zeSign);
 };
 
-let firstPostLoaded = false;
+// let firstPostLoaded = false;
 const firstPost = () => {
   console.log('first post!!');
   setTimeout(() => {
@@ -99,36 +99,40 @@ const firstPost = () => {
     if (author == '/zelenskiy_official/') {
       zeStyles(post);
       // author = null;
-      firstPostLoaded = true;
+      // firstPostLoaded = true;
     } else {
       post.style.border = '2px solid lime';
       console.log('else case');
     }
-  }, 300); // added on 07/01/2022
+  }, 1000); // added on 07/01/2022
 };
 
 let mainUrl = 'https://www.instagram.com/';
-let canLoadZe = true;
+// let canLoadZe = true;
 
 let lastUrl = location.href;
+let urlChanged = false;
 new MutationObserver(() => {
   const url = location.href;
   if (url !== lastUrl) {
     lastUrl = url;
+    urlChanged = true;
     onUrlChange();
   }
 }).observe(document, { subtree: true, childList: true });
 
 function onUrlChange() {
-  if (lastUrl == mainUrl) {
-    canLoadZe = true;
-    if (!firstPostLoaded) {
-      firstPost();
-    }
-  } else {
-    canLoadZe = false;
-    // firstPostLoaded = false; // hidden in 2022 jan.
+  // if (lastUrl == mainUrl) {
+  if (location.pathname == '/') {
+    // canLoadZe = true;
+    // if (!firstPostLoaded) {
+    firstPost();
+    // }
   }
+  // else {
+  // canLoadZe = false;
+  // firstPostLoaded = false; // hidden in 2022 jan.
+  // }
 }
 
 window.addEventListener('load', () => {
@@ -142,30 +146,31 @@ window.addEventListener('load', () => {
 let logoUrl = '/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png';
 let logo = 'https://www.instagram.com' + logoUrl;
 window.addEventListener('click', (event) => {
-  let targetPath = event.target.innerHTML
-    .split(' ')
-    .filter((item) => item.includes('src='))
-    .join('')
-    .slice(5, this.length - 1);
-  // console.log(targetPath);
-  // console.log('logo', logoUrl);
-  // <div class="cq2ai"><img alt="Instagram" class="s4Iyt" src="/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" srcset="/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png 2x"></div>
-  if (
-    event.target.src == logo ||
-    event.target.ariaLabel == 'Home' ||
-    event.target.parentNode.ariaLabel == 'Home' ||
-    targetPath == logoUrl
-  ) {
-    console.log('match');
-    firstPost();
+  if (location.pathname == '/' && !urlChanged) {
+    let targetPath = event.target.innerHTML
+      .split(' ')
+      .filter((item) => item.includes('src='))
+      .join('')
+      .slice(5, this.length - 1);
+    if (
+      event.target.src == logo ||
+      event.target.ariaLabel == 'Home' ||
+      event.target.parentNode.ariaLabel == 'Home' ||
+      targetPath == logoUrl
+    ) {
+      console.log('match');
+      firstPost();
+    }
   }
+  urlChanged = false; // on second and further clicks url isn't changed
 });
 // end of updated
 
 let zePosts = null;
 window.addEventListener('scroll', () => {
   // console.log(location.pathname);
-  if (canLoadZe && location.pathname == '/') {
+  // if (canLoadZe && location.pathname == '/') {
+  if (location.pathname == '/') {
     rect = post.getBoundingClientRect();
     // console.log(rect.bottom);
     // console.log('scroll');

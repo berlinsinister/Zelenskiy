@@ -4,36 +4,116 @@
   <head>
     <meta charset="UTF-8" />
     <style>
-      body {
-        width: 100px;
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      /* body {} */
+      .container {
+        width: 250px;
         background: #fafafa;
-        /* padding: 20px; */
+        /* border: 1px solid green; */
         text-align: center;
+        padding: 15px;
+      }
+      h3,
+      h4 {
+        color: #333;
+        margin-bottom: 10px;
       }
       h3 {
-        color: #333;
+        color: #00b140;
+        margin-top: 10px;
+      }
+      #instruction {
+        margin: 30px 0 10px 0;
+      }
+      #input {
+        width: 90%;
+        padding: 7px;
+        border: 1px solid gainsboro;
+        /* display: inline-block; */
+      }
+      #input:focus {
+        outline: none;
+      }
+      #error {
+        display: none;
+        color: #f00;
+        margin-top: 5px;
       }
       button {
-        padding: 10px 0;
-        width: 50px;
+        padding: 10px;
+        width: fit-content;
         outline: none;
         background: #00b140; /* #fafafa; */
-        /* border: 1px solid silver; */
+        color: #fff;
         border: none;
-        border-radius: 4px;
+        border-radius: 3px;
         cursor: pointer;
-        margin-bottom: 20px;
+        margin: 20px 0;
       }
       button:hover {
-        background: #333;
-        color: #fff;
-        /* border-color: #333; */
+        transform: translate(1px, 1px);
       }
     </style>
   </head>
   <body>
-    <h3>Ze Instagram extenstion</h3>
-    <button id="button">OFF</button>
+    <div class="container">
+      <h3><span id="user">{{ user }}</span></h3>
+      <h4>Instagram extenstion</h4>
+      <p id="instruction">Enter username, press enter and click turn on</p>
+      <input type="text" id="input" />
+      <p id="error"></p>
+      <button id="button">TURN ON</button>
+    </div>
     <!-- <script src="changeStatus.js"></script> -->
+    <script>
+      let userDOM = document.querySelector('#user');
+      let instructionDOM = document.querySelector('#instruction');
+      let inputDOM = document.querySelector('#input');
+      let errorDOM = document.querySelector('#error');
+      let buttonDOM = document.querySelector('#button');
+
+      let status = true;
+      let input = '';
+      let error = false;
+
+      inputDOM.addEventListener('change', (event) => {
+        userDOM.innerHTML = event.target.value;
+        input = event.target.value;
+        if (error) {
+          error = false;
+          errorDOM.style.display = 'none';
+        }
+      });
+
+      buttonDOM.addEventListener('click', () => {
+        if (!input) {
+          errorDOM.innerHTML = '* username missing';
+          errorDOM.style.display = 'block';
+          error = true;
+        } else {
+          status = !status;
+          buttonDOM.innerHTML = status ? 'TURN ON' : 'TURN OFF';
+          if (!status) {
+            instructionDOM.innerHTML = 'Extension running!';
+            inputDOM.style.display = 'none';
+          } else {
+            // turning off
+            userDOM.innerHTML = '{{ user }}';
+            instructionDOM.innerHTML =
+              'Enter username, press enter and click turn on';
+            inputDOM.style.display = 'inline-block';
+            inputDOM.value = '';
+            input = '';
+            error = false;
+          }
+        }
+      });
+    </script>
   </body>
 </html>
